@@ -98,6 +98,7 @@ def api_user_register(*, email, phone, username, password):
 
 @get('/api/contract')
 def api_contract(*, userid, page='1'):
+    print(userid)
     page_index = get_page_index(page)
     num = yield from Contract.findNumber('count(id)')
     p = Page(num, page_index)

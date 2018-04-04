@@ -64,7 +64,7 @@ def test_contract(userid):
     payload = {
         'userid': userid
     }
-    r = requests.get('%scontract' % base_url, data=payload)
+    r = requests.get('%scontract' % base_url, params=payload)
     print(r.json())
 test_contract('001522851529077a38aa10ef322412ab71bb77b972447e1000')
 
