@@ -226,6 +226,20 @@ class Model(dict, metaclass=ModelMetaclass):
             return None
         return cls(**rs[0])
 
+    @classmethod
+    @asyncio.coroutine
+    def mexecute(cls, sql, args=None):
+        'execute complex sql'
+        affectednum = yield from execute(sql, args)
+        return affectednum
+
+    @classmethod
+    @asyncio.coroutine
+    def mselect(cls, sql, args=None):
+        'execute complex sql'
+        rs = yield from select(sql, args)
+        return [cls(**r) for r in rs]
+
     @asyncio.coroutine
     def save(self):
         args = list(map(self.getValueOrDefault, self.__fields__))

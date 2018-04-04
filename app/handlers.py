@@ -16,7 +16,7 @@ import re, time, json, logging, hashlib, base64, asyncio
 from aiohttp import web
 from coreweb import get, post
 from apis import Page, APIValueError, APIResourceNotFoundError
-from models import Test, next_id, User
+from models import Test, next_id, User, File, Member, Message, Task, Log, Contract
 from utils.rongcloud_utils import get_token
 
 def get_page_index(page_str):
@@ -28,16 +28,6 @@ def get_page_index(page_str):
     if p < 1:
         p = 1
     return p
-
-@get('/api/test')
-def api_test(*, page='1'):
-    page_index = get_page_index(page)
-    num = yield from Test.findNumber('count(id)')
-    p = Page(num, page_index)
-    if num == 0:
-        return dict(page=p, blogs=())
-    blogs = yield from Test.findAll(orderBy='id desc', limit=(p.offset, p.limit))
-    return dict(page=p, blogs=blogs)
 
 @get('/api/user')
 def api_user(*, page='1'):
@@ -104,4 +94,36 @@ def api_user_register(*, email, phone, username, password):
     return {
         'result' : result,
         'token' : token
+    }
+
+@get('/api/contract')
+def api_contract(*, userid, page='1'):
+    page_index = get_page_index(page)
+    num = yield from Contract.findNumber('count(id)')
+    p = Page(num, page_index)
+    if num == 0:
+        return dict(page=p, contract=())
+    sql = 'SELECT `users`.id,`users`.username,`users`.nickname,`users`.email,`users`.birthday,`users`.sex,`users`.avatar,' \
+          '`users`.phone,`users`.remark,users.create_date,users.update_date,contracts.create_date AS contract_date,contracts.note ' \
+          'FROM users LEFT JOIN contracts ON users.id = contracts.contractid WHERE users.id in (SELECT contractid FROM ' \
+          'contracts WHERE `contracts`.userid = ?);'
+    contracts = yield from Contract.mselect(sql, [userid])
+    print(contracts)
+    return dict(page=p, contract=contracts)
+
+@post('/api/contract/new')
+def api_contract_new(*, userid, contractid):
+    if not userid:
+        raise APIValueError('userid')
+    if not contractid:
+        raise APIValueError('contractid')
+    fromid = next_id()
+    fcontract = Contract(id=fromid, userid=userid, contractid=contractid)
+    fres = yield from fcontract.save()
+    toid = next_id()
+    tcontract = Contract(id=toid, userid=contractid, contractid=userid)
+    tres = yield from tcontract.save()
+    return {
+        'fres' : fres,
+        'tres' : tres
     }

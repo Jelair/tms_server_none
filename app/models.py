@@ -51,7 +51,7 @@ class File(Model):
     filesize = IntegerField()
     filepath = StringField(ddl='varchar(255)')
     userid = StringField(ddl='varchar(50)')
-    upload_date = FloatField()
+    upload_date = FloatField(default=time.time())
 
 class Task(Model):
     __table__ = 'task'
@@ -60,9 +60,9 @@ class Task(Model):
     taskname = StringField(ddl='varchar(32)')
     taskcontent = StringField(ddl='varchar(255)')
     fileid = StringField(ddl='varchar(50)')
-    deadline = FloatField()
+    deadline = FloatField(default=time.time())
     userid = StringField(ddl='varchar(50)')
-    create_date = FloatField()
+    create_date = FloatField(default=time.time())
     level = IntegerField()
     parentid = StringField(ddl='varchar(50)')
     progress = IntegerField()
@@ -73,7 +73,7 @@ class Contract(Model):
     id = StringField(primary_key=True, default=next_id(), ddl='varchar(50)')
     userid = StringField(ddl='varchar(50)')
     contractid = StringField(ddl='varchar(50)')
-    create_date = FloatField()
+    create_date = FloatField(default=time.time())
     note = StringField(ddl='varchar(50)')
 
 class Member(Model):
@@ -82,7 +82,7 @@ class Member(Model):
     id = StringField(primary_key=True, default=next_id(), ddl='varchar(50)')
     taskid = StringField(ddl='varchar(50)')
     memberid = StringField(ddl='varchar(50)')
-    create_date = FloatField()
+    create_date = FloatField(default=time.time())
     userid = StringField(ddl='varchar(50)')
     ismaster = BooleanField()
 
@@ -92,7 +92,7 @@ class Log(Model):
     id = StringField(primary_key=True, default=next_id(), ddl='varchar(50)')
     taskid = StringField(ddl='varchar(50)')
     userid = StringField(ddl='varchar(50)')
-    log_date = FloatField()
+    log_date = FloatField(default=time.time())
     logcontent = StringField(ddl='varchar(255)')
 
 class Message(Model):
@@ -101,5 +101,5 @@ class Message(Model):
     id = StringField(primary_key=True, default=next_id(), ddl='varchar(50)')
     fromuserid = StringField(ddl='varchar(50)')
     touserid = StringField(ddl='varchar(50)')
-    send_date = FloatField()
+    send_date = FloatField(default=time.time())
     content = StringField(ddl='varchar(255)')
