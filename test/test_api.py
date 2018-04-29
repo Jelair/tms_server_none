@@ -15,13 +15,20 @@ __author__ = 'simplefly'
 
 import requests
 base_url = 'http://127.0.0.1:8000/api/'
+remo_url = 'http://119.3.29.176:8000/api/'
 
 def test_users():
-    r = requests.get('%suser' % base_url)
+    r = requests.get('%suser' % remo_url)
     rs = r.json()
     print(rs)
     return rs
 #test_users()
+
+def test_task_st(userid):
+    payload = {'userid': userid}
+    r = requests.get('%sstatistical' % base_url, params=payload)
+    print(r.json())
+test_task_st('0015247910663195a94786ca59f4c4d888212c69cc7a1d8000')
 
 def test_check_username(username):
     payload = {'username': username}
@@ -60,13 +67,22 @@ def test_contract_new(userid, contractid):
     r = requests.post('%scontract/new' % base_url, data=payload)
     print(r.json())
 
+def test_contract_delete(userid, contractid):
+    payload = {
+        'userid': userid,
+        'contractid': contractid
+    }
+    r = requests.post('%scontract/delete' % base_url, data=payload)
+    print(r.json())
+#test_contract_delete('001522851529077a38aa10ef322412ab71bb77b972447e1000', '0015228515296709c90c69101fa4102875a55eda1a0bb5f000')
+
 def test_contract(userid):
     payload = {
         'userid': userid
     }
     r = requests.get('%scontract' % base_url, params=payload)
     print(r.json())
-test_contract('001522851529077a38aa10ef322412ab71bb77b972447e1000')
+#test_contract('001522851529077a38aa10ef322412ab71bb77b972447e1000')
 
 def action_add_users(count):
     import random
@@ -91,3 +107,73 @@ def action_add_contracts(userid):
             continue
         test_contract_new(userid, r['id'])
 #action_add_contracts('001522851529077a38aa10ef322412ab71bb77b972447e1000')
+
+def test_login(*, username, email, phone, password):
+    payload = {
+        'phone': phone,
+        'password': password
+    }
+    r = requests.get('%suser/login' % base_url, params=payload)
+    print(r.json())
+
+    payload2 = {
+        'username': username,
+        'password': password
+    }
+    r2 = requests.get('%suser/login' % base_url, params=payload2)
+    print(r2.json())
+
+    payload3 = {
+        'email': email,
+        'password': password
+    }
+    r3 = requests.get('%suser/login' % base_url, params=payload3)
+    print(r3.json())
+
+#test_login(username='nhi', email='146054@qq.com', phone='14654', password='9c35d41622b8a3910141f91fce255d8befe38f36')
+
+def test_info(userid):
+    payload = {
+        'userid': userid
+    }
+    r = requests.get('%suser/info' % base_url, params=payload)
+    print(r.json())
+#test_info('001522851529077a38aa10ef322412ab71bb77b972447e1000')
+
+def test_contract_update(note, userid, contractid):
+    payload = {
+        'note': note,
+        'userid':  userid,
+        'contractid': contractid
+    }
+    r = requests.post('%scontract/update' % base_url, data=payload)
+    print(r.json())
+#test_contract_update('aaa', '0015228515296709c90c69101fa4102875a55eda1a0bb5f000', '001522851529077a38aa10ef322412ab71bb77b972447e1000')
+
+def test_task_new(userid, taskname, taskcontent, deadline):
+    payload = {
+        'userid': userid,
+        'taskname': taskname,
+        'taskcontent': taskcontent,
+        'deadline': deadline,
+    }
+    r = requests.post('%stask/new' % base_url, data=payload)
+    r = r.json()
+    print(r)
+#test_task_new('0015228515296709c90c69101fa4102875a55eda1a0bb5f000', 'run', 'runing', 132131)
+
+def test_log(taskid):
+    payload = {
+        'taskid': taskid
+    }
+    rs = requests.get('%slog' % base_url, params=payload)
+    print(rs.json())
+#test_log('1')
+
+def test_task_list(id):
+    payload = {
+        'userid': id
+    }
+    rs = requests.get('%stask/list' % base_url, params=payload)
+    print(rs.json())
+#test_task_list('1')

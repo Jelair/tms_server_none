@@ -31,7 +31,7 @@ async def store_mp3_handler(request):
     # name = await field.read(decode=True)
 
     field = await reader.next()
-    assert field.name == 'mp3'
+    #assert field.name == 'mp3'
     filename = field.filename
     # You cannot rely on Content-Length if transfer is chunked.
     size = 0
@@ -48,6 +48,14 @@ async def store_mp3_handler(request):
 
     return web.Response(text='{} sized of {} successfully stored'
                              ''.format(filename, size))
+
+@get('/file/{filename}')
+async def get_file(*, filename):
+    print(filename)
+    path = 'E:/upload/'
+    with open(os.path.join(path, filename), 'rb') as f:
+        data = f.read()
+    return web.Response(body=data)
 
 @get('/')
 async def hello(request):

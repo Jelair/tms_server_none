@@ -50,7 +50,6 @@ class File(Model):
     filetype = StringField(ddl='varchar(10)')
     filesize = IntegerField()
     filepath = StringField(ddl='varchar(255)')
-    userid = StringField(ddl='varchar(50)')
     upload_date = FloatField(default=time.time())
 
 class Task(Model):
@@ -63,9 +62,9 @@ class Task(Model):
     deadline = FloatField(default=time.time())
     userid = StringField(ddl='varchar(50)')
     create_date = FloatField(default=time.time())
-    level = IntegerField()
+    level = IntegerField(default=0)
     parentid = StringField(ddl='varchar(50)')
-    progress = IntegerField()
+    progress = IntegerField(default=0)
 
 class Contract(Model):
     __table__ = 'contracts'
@@ -101,5 +100,27 @@ class Message(Model):
     id = StringField(primary_key=True, default=next_id(), ddl='varchar(50)')
     fromuserid = StringField(ddl='varchar(50)')
     touserid = StringField(ddl='varchar(50)')
+    taskid = StringField(ddl='varchar(50)')
     send_date = FloatField(default=time.time())
     content = StringField(ddl='varchar(255)')
+    isovertime = BooleanField()
+
+class RemindMsg(Model):
+    __table__ = 'remindmsg'
+
+    id = StringField(primary_key=True, default=next_id(), ddl='varchar(50)')
+    fromuserid = StringField(ddl='varchar(50)')
+    touserid = StringField(ddl='varchar(50)')
+    send_date = FloatField(default=time.time())
+    content = StringField(ddl='varchar(255)')
+    isovertime = BooleanField()
+
+class TaskResult(Model):
+    __table__ = 'taskresult'
+
+    id = id = StringField(primary_key=True, default=next_id(), ddl='varchar(50)')
+    taskid = StringField(ddl='varchar(50)')
+    userid = StringField(ddl='varchar(50)')
+    fileid = StringField(ddl='varchar(50)')
+    desc = StringField(ddl='varchar(255)')
+    submit_date = FloatField(default=time.time())

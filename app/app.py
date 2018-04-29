@@ -91,7 +91,7 @@ def init(loop):
     ])
 
     add_routes(app, 'handlers')
-    srv = yield from loop.create_server(app.make_handler(), '127.0.0.1', 8000)
+    srv = yield from loop.create_server(app.make_handler(), '', 8000)
     logging.info('server started at http://127.0.0.1:8000...')
     return srv
 
